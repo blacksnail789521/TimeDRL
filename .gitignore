@@ -129,7 +129,7 @@ dmypy.json
 .pyre/
 
 
-/dataset
+# /dataset
 /checkpoints
 /results
 .vscode/
@@ -137,5 +137,6 @@ desktop.ini
 ray_results*/
 *.zip
 *.png
+.DS_Store
 _tune_*.py
 ray_tune_tools.py
