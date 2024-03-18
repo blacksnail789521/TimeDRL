@@ -54,14 +54,6 @@ class Exp_Classification(Exp_Basic):
 
         return train_loader, valid_loader, test_loader
 
-    def _select_optimizer(self):
-        model_optim = getattr(optim, self.args.optim)(
-            self.model.parameters(),
-            lr=self.args.learning_rate,
-            weight_decay=self.args.weight_decay,
-        )
-        return model_optim
-
     def _build_linear_eval(self):
         self.linear_eval = (
             linear_eval.Model(

@@ -33,14 +33,6 @@ class Exp_Forecasting(Exp_Basic):
         print_params(model)
         return model
 
-    def _select_optimizer(self):
-        model_optim = getattr(optim, self.args.optim)(
-            self.model.parameters(),
-            lr=self.args.learning_rate,
-            weight_decay=self.args.weight_decay,
-        )
-        return model_optim
-
     def _build_linear_eval(self):
         D, C, T_out = self.args.d_model, self.args.C, self.args.pred_len
         self.linear_eval = (
@@ -332,11 +324,11 @@ class Exp_Forecasting(Exp_Basic):
                     if self.args.disable_predictive_loss:
                         pretrain_losses.append(0)
                     else:
-                        predictive_losses.append(predictive_loss.item()) # type: ignore
+                        predictive_losses.append(predictive_loss.item())  # type: ignore
                     if self.args.disable_contrastive_loss:
                         contrastive_losses.append(0)
                     else:
-                        contrastive_losses.append(contrastive_loss.item()) # type: ignore
+                        contrastive_losses.append(contrastive_loss.item())  # type: ignore
                     pretrain_losses.append(pretrain_loss.item())
 
                 # ? 4. Backward
@@ -473,7 +465,9 @@ class Exp_Forecasting(Exp_Basic):
                 linear_eval_history["best_test_mae"].append(np.nan)
             else:
                 best_mse_epoch = np.nanargmin(local_linear_eval_history["test"]["loss"])
-                best_test_mse = local_linear_eval_history["test"]["loss"][best_mse_epoch]
+                best_test_mse = local_linear_eval_history["test"]["loss"][
+                    best_mse_epoch
+                ]
                 best_test_mae = local_linear_eval_history["test"]["mae"][best_mse_epoch]
                 linear_eval_history["best_test_mse"].append(best_test_mse)
                 linear_eval_history["best_test_mae"].append(best_test_mae)
