@@ -48,6 +48,13 @@ def get_args_from_parser() -> argparse.Namespace:
         help="overwrite args with fixed_params and tunable_params",
         default=False,
     )
+    parser.add_argument(
+        "--delete_checkpoints",
+        action="store_true",
+        help="delete checkpoints after training",
+        # default=False,
+        default=True,
+    )
 
     # * data loader
     parser.add_argument(
@@ -364,7 +371,7 @@ def update_args(
     return args
 
 
-def run_exp(args: argparse.Namespace, delete_checkpoints: bool = True) -> dict:
+def run_exp(args: argparse.Namespace) -> dict:
     # * Get exp
     if args.task_name == "forecasting":
         exp = Exp_Forecasting(args)
@@ -380,7 +387,7 @@ def run_exp(args: argparse.Namespace, delete_checkpoints: bool = True) -> dict:
         metrics = exp.train(use_tqdm=True)
 
     # * Delete checkpoints
-    if delete_checkpoints:
+    if args.delete_checkpoints:
         shutil.rmtree(args.checkpoints, ignore_errors=True)
 
     return metrics
@@ -388,7 +395,6 @@ def run_exp(args: argparse.Namespace, delete_checkpoints: bool = True) -> dict:
 
 def trainable_forecasting(
     args: argparse.Namespace,
-    delete_checkpoints: bool = True,
 ) -> dict:
     # Run experiments with different pred_len
     metrics_dict = {}
@@ -396,7 +402,7 @@ def trainable_forecasting(
         # Update pred_len
         args.pred_len = pred_len
 
-        metrics_dict[pred_len] = run_exp(args, delete_checkpoints)
+        metrics_dict[pred_len] = run_exp(args)
 
     # Return metrics
     return_metrics = {}
@@ -417,10 +423,9 @@ def trainable_forecasting(
 
 def trainable_classification(
     args: argparse.Namespace,
-    delete_checkpoints: bool = True,
 ) -> dict:
     # Run the experiment
-    metrics = run_exp(args, delete_checkpoints)
+    metrics = run_exp(args)
 
     return metrics  # We only care about the best test loss for the downstream task
 
@@ -429,15 +434,14 @@ def trainable(
     tunable_params: dict,
     fixed_params: dict,
     args: argparse.Namespace,
-    delete_checkpoints: bool = True,
 ) -> dict:
     # Update args
     args = update_args(args, fixed_params, tunable_params)
 
     if fixed_params["task_name"] == "forecasting":
-        return_metrics = trainable_forecasting(args, delete_checkpoints)
+        return_metrics = trainable_forecasting(args)
     elif fixed_params["task_name"] == "classification":
-        return_metrics = trainable_classification(args, delete_checkpoints)
+        return_metrics = trainable_classification(args)
     else:
         raise NotImplementedError
 
