@@ -361,10 +361,16 @@ def update_args(
     fixed_params: dict,
     tunable_params: dict,
 ) -> argparse.Namespace:
+    # Check if there are duplicated keys
+    duplicated_keys = set(fixed_params.keys()) & set(tunable_params.keys())
+    assert not duplicated_keys, f"Duplicated keys found: {duplicated_keys}"
+
+    # Update args from fixed_params, tunable_params, and dataset
     if args.overwrite_args:
         args = update_args_from_fixed_params(args, fixed_params)
         args = update_args_from_tunable_params(args, tunable_params)
     args = update_args_from_dataset(args)
+
     args.setting = f"{args.task_name}_{args.data_name}"
     print(f"Args in experiment: {args}")
 
