@@ -26,7 +26,6 @@
     "pos_embed_type": "learnable",
     "token_embed_type": "conv",
     "token_embed_kernel_size": 7,
-    "get_i": "cls",
     "dropout": 0.15,
     "base_d_model": 128,
     "n_layers": 1,

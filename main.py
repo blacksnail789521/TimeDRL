@@ -588,7 +588,6 @@ if __name__ == "__main__":
         "pos_embed_type": "learnable",
         "token_embed_type": "conv",
         "token_embed_kernel_size": 3,
-        "get_i": "cls",
         "dropout": 0.2,
         "base_d_model": 64,
         "n_layers": 1,
