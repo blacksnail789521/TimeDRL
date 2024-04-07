@@ -327,6 +327,7 @@ def get_args_from_parser() -> argparse.Namespace:
     args.return_single_feature = False
 
     args.use_gpu = True if torch.cuda.is_available() and args.use_gpu else False
+    args.root_folder = Path.cwd()  # Set this outside of the trainable function
 
     return args
 
@@ -548,7 +549,6 @@ if __name__ == "__main__":
 
     # Setup args
     args = get_args_from_parser()
-    args.root_folder = Path.cwd()  # Set this outside of the trainable function
 
     # Setup fixed params
     fixed_params = {
